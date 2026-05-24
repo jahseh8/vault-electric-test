@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intake Form — Vault Electric</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Client intake form. Confidential.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231e4dd8'/%3E%3Ctext x='16' y='22' font-family='Inter,sans-serif' font-size='18' font-weight='500' fill='white' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap">
+
+  <style>
+    /* Design tokens — synced from Vault Electric site (industrial-mono palette, template_source: pody) */
+    :root {
+      --color-primary: #1e4dd8;
+      --color-secondary: #0a0a0a;
+      --color-accent: #3d6ce8;
+      --color-text: #1a1a1a;
+      --color-text-muted: #555;
+      --color-bg: #fafafa;
+      --color-bg-alt: #efefef;
+      --color-border: #d8d8d8;
+      --color-error: #c0392b;
+      --color-success: #27ae60;
+      --font-heading: 'Inter', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --radius: 6px;
+      --shadow-focus: 0 0 0 3px color-mix(in srgb, var(--color-primary) 30%, transparent);
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root[data-theme="auto"] { --color-primary: #3d6ce8; --color-secondary: #fafafa; --color-accent: #1e4dd8; --color-text: #f4f4f4; --color-text-muted: #aaa; --color-bg: #1a1a1a; --color-bg-alt: #242424; --color-border: #444; }
+    }
+    :root[data-theme="dark"] { --color-primary: #3d6ce8; --color-secondary: #fafafa; --color-accent: #1e4dd8; --color-text: #f4f4f4; --color-text-muted: #aaa; --color-bg: #1a1a1a; --color-bg-alt: #242424; --color-border: #444; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; padding: 0; font-family: var(--font-body); font-size: 16px; line-height: 1.5; color: var(--color-text); background: var(--color-bg); }
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--color-primary); color: white; padding: var(--space-2) var(--space-4); text-decoration: none; z-index: 100; }
+    .skip-link:focus { top: 0; }
+    .container { max-width: 760px; margin: 0 auto; padding: var(--space-8) var(--space-4); }
+    header { text-align: center; margin-bottom: var(--space-8); }
+    .logo-mark { display: inline-block; width: 64px; height: 64px; background: var(--color-primary); color: white; line-height: 64px; text-align: center; font-family: var(--font-heading); font-weight: 500; font-size: 1.8rem; border-radius: 6px; margin-bottom: var(--space-3); }
+    h1 { font-family: var(--font-heading); font-size: clamp(1.75rem, 4vw, 2.5rem); margin: var(--space-4) 0 var(--space-2); font-weight: 500; }
+    .lede { color: var(--color-text-muted); max-width: 600px; margin: 0 auto; }
+    .badge-mode { display: inline-block; background: var(--color-bg-alt); color: var(--color-text-muted); padding: var(--space-1) var(--space-3); border-radius: 99px; font-size: 0.85rem; margin-bottom: var(--space-4); }
+    section.field-group { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--space-6); margin-bottom: var(--space-6); }
+    section.field-group > h2 { font-family: var(--font-heading); font-size: 1.25rem; margin: 0 0 var(--space-2); font-weight: 500; }
+    section.field-group > p.group-help { color: var(--color-text-muted); font-size: 0.9rem; margin: 0 0 var(--space-6); }
+    .field { margin-bottom: var(--space-4); }
+    .field label { display: block; font-weight: 500; margin-bottom: var(--space-1); font-size: 0.95rem; }
+    .field .field-help { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+    .field input[type="text"], .field input[type="email"], .field input[type="url"], .field input[type="tel"], .field input[type="number"], .field input[type="date"], .field input[type="time"], .field input[type="color"], .field select, .field textarea { width: 100%; padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius); font-family: inherit; font-size: 1rem; background: var(--color-bg); color: var(--color-text); }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--color-primary); box-shadow: var(--shadow-focus); outline-offset: 0; }
+    .field textarea { min-height: 100px; resize: vertical; }
+    .field input[type="checkbox"] { width: auto; margin-right: var(--space-2); }
+    .field input[type="file"] { width: 100%; padding: var(--space-2); }
+    .required-mark { color: var(--color-error); }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .field-row .field { margin-bottom: 0; }
+    @media (max-width: 600px) { .field-row { grid-template-columns: 1fr; } }
+    .repeatable-block { border: 1px dashed var(--color-border); border-radius: var(--radius); padding: var(--space-4); margin-bottom: var(--space-3); }
+    .repeatable-block .repeat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); }
+    .repeatable-block .repeat-header h3 { margin: 0; font-family: var(--font-heading); font-size: 1rem; font-weight: 500; }
+    button.btn-add-repeat, button.btn-remove-repeat { background: transparent; border: 1px solid var(--color-border); padding: var(--space-2) var(--space-4); border-radius: var(--radius); cursor: pointer; font-family: inherit; font-size: 0.9rem; color: var(--color-text); }
+    button.btn-add-repeat:hover { background: var(--color-bg-alt); }
+    button.btn-remove-repeat { color: var(--color-error); border-color: var(--color-error); }
+    details.advanced-section { margin-bottom: var(--space-6); }
+    details.advanced-section > summary { cursor: pointer; padding: var(--space-4); background: var(--color-bg-alt); border-radius: var(--radius); font-family: var(--font-heading); font-weight: 500; list-style: none; user-select: none; }
+    details.advanced-section > summary::after { content: ' ▾'; float: right; transition: transform 0.2s; }
+    details.advanced-section[open] > summary::after { content: ' ▴'; }
+    details.advanced-section[open] > summary { margin-bottom: var(--space-6); }
+    .agreement-block { background: color-mix(in srgb, var(--color-primary) 8%, transparent); border: 2px solid var(--color-primary); padding: var(--space-6); border-radius: var(--radius); margin: var(--space-8) 0; }
+    .agreement-block h2 { margin: 0 0 var(--space-4); font-family: var(--font-heading); font-weight: 500; }
+    .agreement-block .agreement-checkbox { display: flex; align-items: flex-start; gap: var(--space-3); margin-top: var(--space-4); }
+    .agreement-block .agreement-checkbox input { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; }
+    .agreement-block .agreement-checkbox label { font-weight: 500; font-size: 1rem; }
+    .submit-row { display: flex; justify-content: flex-end; gap: var(--space-3); margin-top: var(--space-6); }
+    button[type="submit"] { background: var(--color-primary); color: white; border: none; padding: var(--space-3) var(--space-8); border-radius: var(--radius); font-family: inherit; font-size: 1rem; font-weight: 500; cursor: pointer; }
+    button[type="submit"]:hover { filter: brightness(1.08); }
+    button[type="submit"]:disabled { opacity: 0.5; cursor: not-allowed; }
+    .honeypot-field { position: absolute; left: -9999px; opacity: 0; pointer-events: none; }
+    @media (max-width: 600px) { .container { padding: var(--space-4) var(--space-3); } section.field-group { padding: var(--space-4); } .submit-row { justify-content: stretch; } button[type="submit"] { width: 100%; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to form</a>
+
+  <div class="container">
+    <header>
+      <div class="logo-mark" aria-label="Vault Electric logo">V</div>
+      <span class="badge-mode">Maintenance update</span>
+      <h1>Intake form — Vault Electric</h1>
+      <p class="lede">Review every value below. Update anything that's changed. Tick the agreement box at the bottom and submit. Submissions are confidential and only seen by the operator.</p>
+    </header>
+
+    <main id="main">
+      <form name="vault-electric-intake" method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            enctype="multipart/form-data">
+
+        <input type="hidden" name="form-name" value="vault-electric-intake">
+        <input type="hidden" name="client_slug" value="vault-electric">
+        <input type="hidden" name="form_mode" value="maintenance">
+        <input type="hidden" name="form_generated_at" value="2026-05-23T15:00:00-04:00">
+        <input type="hidden" name="info_md_version_at_generation" value="1">
+
+        <p class="honeypot-field"><label>Do not fill this field <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+
+        <!-- =================== FIELDS:BASE =================== -->
+
+        <!-- Identity -->
+        <section class="field-group">
+          <h2>Identity</h2>
+          <p class="group-help">Core business identity. Affects everything from page titles to legal documents.</p>
+          <div class="field"><label for="business_name_legal">Legal business name <span class="required-mark">*</span></label><input id="business_name_legal" name="business_name_legal" type="text" value="Vault Electric Co. Inc." required></div>
+          <div class="field"><label for="business_name_display">Display name <span class="required-mark">*</span></label><input id="business_name_display" name="business_name_display" type="text" value="Vault Electric" required></div>
+          <div class="field"><label for="business_category">Specific business category <span class="required-mark">*</span></label><input id="business_category" name="business_category" type="text" value="electrician" required><p class="field-help">The specific kind of business you run — for example: electrician, plumber, wedding planner, interior designer.</p></div>
+          <div class="field"><label for="website_url">Website URL <span class="required-mark">*</span></label><input id="website_url" name="website_url" type="url" value="https://vaultelectric.ca" required></div>
+          <div class="field"><label for="business_tagline">Tagline</label><input id="business_tagline" name="business_tagline" type="text" value="Honest electrical work. The lights stay on."></div>
+          <div class="field"><label for="business_description_short">Short description <span class="required-mark">*</span></label><textarea id="business_description_short" name="business_description_short" required>A Toronto residential electrician serving the Annex, Roncesvalles, the Junction, and Leslieville. Panel upgrades, knob-and-tube re-wires, EV chargers, pot lights, ESA inspections. Licensed master electrician, $5M insured.</textarea><p class="field-help">~50 words. Used in meta description and OG tags.</p></div>
+          <div class="field"><label for="business_description_long">Long description <span class="required-mark">*</span></label><textarea id="business_description_long" name="business_description_long" rows="6" required>Vault Electric was founded in 2014 by Marcus Vault, a former tier-1 commercial electrician who shifted to residential work after a decade on downtown high-rise build-outs. The shop is small on purpose — Marcus and two journeymen — and based out of a lane-house workshop near Christie Pits. Most of the work is on Toronto's pre-1950 housing stock: knob-and-tube re-wires, panel upgrades from 60-amp service to 200-amp, and the kind of finish-work re-trim that has to come AFTER drywall is sealed up. The workmanship is in writing for ten years, the price is fixed at quote, and we coordinate the ESA inspection ourselves.</textarea><p class="field-help">~150 words. Used on the About page.</p></div>
+          <div class="field"><label for="year_founded">Year founded <span class="required-mark">*</span></label><input id="year_founded" name="year_founded" type="number" value="2014" required></div>
+        </section>
+
+        <!-- Contact -->
+        <section class="field-group">
+          <h2>Contact</h2>
+          <p class="group-help">Phone, email, address. Wrong values trigger client complaints.</p>
+          <div class="field-row">
+            <div class="field"><label for="phone_primary_display">Primary phone (display) <span class="required-mark">*</span></label><input id="phone_primary_display" name="phone_primary_display" type="tel" value="(416) 555-0739" required></div>
+            <div class="field"><label for="phone_primary_tel">Primary phone (tel: format) <span class="required-mark">*</span></label><input id="phone_primary_tel" name="phone_primary_tel" type="tel" value="+14165550739" required></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="email_primary">Primary email <span class="required-mark">*</span></label><input id="email_primary" name="email_primary" type="email" value="hello@vaultelectric.ca" required></div>
+            <div class="field"><label for="email_bookings">Bookings email</label><input id="email_bookings" name="email_bookings" type="email" value="book@vaultelectric.ca"></div>
+          </div>
+          <div class="field"><label><input type="checkbox" id="display_address_publicly" name="display_address_publicly" value="true" checked> Show street address on the website?</label><p class="field-help">Set false for home-based or mobile businesses. City and province still appear.</p></div>
+          <div class="field"><label for="address_street">Street address <span class="required-mark">*</span></label><input id="address_street" name="address_street" type="text" value="188 Christie Street" required></div>
+          <div class="field-row">
+            <div class="field"><label for="address_city">City <span class="required-mark">*</span></label><input id="address_city" name="address_city" type="text" value="Toronto" required></div>
+            <div class="field"><label for="address_province">Province <span class="required-mark">*</span></label>
+              <select id="address_province" name="address_province" required>
+                <option selected>ON</option><option>BC</option><option>AB</option><option>SK</option><option>MB</option>
+                <option>NS</option><option>NB</option><option>PE</option><option>NL</option><option>YT</option><option>NT</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label for="address_postal_code">Postal code <span class="required-mark">*</span></label><input id="address_postal_code" name="address_postal_code" type="text" value="M6G 3B6" pattern="^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$" required></div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service area #1</h3></div>
+            <div class="field"><label for="service_area_list-0-region_name">Region name <span class="required-mark">*</span></label><input id="service_area_list-0-region_name" name="service_area_list[0][region_name]" type="text" value="The Annex &amp; Yorkville" required></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service area #2</h3></div>
+            <div class="field"><input name="service_area_list[1][region_name]" type="text" value="Roncesvalles &amp; Parkdale"></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service area #3</h3></div>
+            <div class="field"><input name="service_area_list[2][region_name]" type="text" value="The Junction &amp; Bloor West"></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service area #4</h3></div>
+            <div class="field"><input name="service_area_list[3][region_name]" type="text" value="Leslieville &amp; Riverdale"></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service area #5</h3></div>
+            <div class="field"><input name="service_area_list[4][region_name]" type="text" value="Cabbagetown &amp; St. James Town"></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service area #6</h3></div>
+            <div class="field"><input name="service_area_list[5][region_name]" type="text" value="East York (by appointment)"></div>
+          </div>
+          <button type="button" class="btn-add-repeat" data-target="service_area_list">+ Add service area</button>
+          <div class="repeatable-block" style="margin-top: var(--space-4);">
+            <div class="repeat-header"><h3>Language</h3></div>
+            <div class="field"><input name="languages_spoken[0][language_name]" type="text" value="English" required></div>
+          </div>
+        </section>
+
+        <!-- Emergency contact — Vault DOES offer emergency service -->
+        <section class="field-group">
+          <h2>Emergency contact</h2>
+          <p class="group-help">Required for trades archetypes. Vault offers 24/7 emergency response — enabled.</p>
+          <div class="field"><label><input type="checkbox" id="emergency_service_available" name="emergency_service_available" value="true" checked> Emergency service available?</label></div>
+          <div class="field" data-required-when='{"field":"emergency_service_available","equals":"true"}'><label for="emergency_phone_display">Emergency phone (display)</label><input id="emergency_phone_display" name="emergency_phone_display" type="tel" value="(416) 555-0740"></div>
+          <div class="field" data-required-when='{"field":"emergency_service_available","equals":"true"}'><label for="emergency_phone_tel">Emergency phone (tel: format)</label><input id="emergency_phone_tel" name="emergency_phone_tel" type="tel" value="+14165550740"></div>
+          <div class="field" data-required-when='{"field":"emergency_service_available","equals":"true"}'><label for="emergency_hours_text">Emergency availability text</label><input id="emergency_hours_text" name="emergency_hours_text" type="text" value="24/7 for no-power and burning-smell calls"></div>
+          <div class="field" data-required-when='{"field":"emergency_service_available","equals":"true"}'><label for="emergency_response_time">Response time</label><input id="emergency_response_time" name="emergency_response_time" type="text" value="Within 2 hours"></div>
+        </section>
+
+        <!-- Hours -->
+        <section class="field-group">
+          <h2>Hours</h2>
+          <p class="group-help">Open and close times in 24-hour format. Use "closed" for closed days.</p>
+          <div class="field-row"><div class="field"><label for="hours_monday_open">Monday open</label><input id="hours_monday_open" name="hours_monday_open" type="time" value="07:30"></div><div class="field"><label for="hours_monday_close">Monday close</label><input id="hours_monday_close" name="hours_monday_close" type="time" value="18:00"></div></div>
+          <div class="field-row"><div class="field"><label for="hours_tuesday_open">Tuesday open</label><input id="hours_tuesday_open" name="hours_tuesday_open" type="time" value="07:30"></div><div class="field"><label for="hours_tuesday_close">Tuesday close</label><input id="hours_tuesday_close" name="hours_tuesday_close" type="time" value="18:00"></div></div>
+          <div class="field-row"><div class="field"><label for="hours_wednesday_open">Wednesday open</label><input id="hours_wednesday_open" name="hours_wednesday_open" type="time" value="07:30"></div><div class="field"><label for="hours_wednesday_close">Wednesday close</label><input id="hours_wednesday_close" name="hours_wednesday_close" type="time" value="18:00"></div></div>
+          <div class="field-row"><div class="field"><label for="hours_thursday_open">Thursday open</label><input id="hours_thursday_open" name="hours_thursday_open" type="time" value="07:30"></div><div class="field"><label for="hours_thursday_close">Thursday close</label><input id="hours_thursday_close" name="hours_thursday_close" type="time" value="18:00"></div></div>
+          <div class="field-row"><div class="field"><label for="hours_friday_open">Friday open</label><input id="hours_friday_open" name="hours_friday_open" type="time" value="07:30"></div><div class="field"><label for="hours_friday_close">Friday close</label><input id="hours_friday_close" name="hours_friday_close" type="time" value="17:00"></div></div>
+          <div class="field-row"><div class="field"><label for="hours_saturday_open">Saturday open</label><input id="hours_saturday_open" name="hours_saturday_open" type="time" value="08:00"></div><div class="field"><label for="hours_saturday_close">Saturday close</label><input id="hours_saturday_close" name="hours_saturday_close" type="time" value="14:00"></div></div>
+          <div class="field-row"><div class="field"><label for="hours_sunday_open">Sunday</label><input id="hours_sunday_open" name="hours_sunday_open" type="text" value="closed"></div><div class="field"><label for="hours_sunday_close">&nbsp;</label><input id="hours_sunday_close" name="hours_sunday_close" type="text" value="closed"></div></div>
+        </section>
+
+        <!-- Services (5 entries) -->
+        <section class="field-group">
+          <h2>Services offered</h2>
+          <p class="group-help">Each service displays on the home page services section and on the dedicated services page.</p>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service #1 (lead)</h3></div>
+            <div class="field"><label>Name</label><input name="services[0][name]" type="text" value="Panel upgrades (60A → 200A)" required></div>
+            <div class="field"><label>Short description</label><input name="services[0][description_short]" type="text" value="Permitted upgrades to 200-amp service. ESA inspection coordinated. Most jobs same week."></div>
+            <div class="field"><label>Long description</label><textarea name="services[0][description_long]">Most Toronto homes built before 1980 are still on 60- or 100-amp service. We upgrade to 200-amp, permit the work, coordinate the ESA inspection, and back the install with a ten-year workmanship warranty. Most upgrades are a one-day install once the permit is in hand.</textarea></div>
+            <div class="field-row"><div class="field"><label>Price display mode</label><select name="services[0][price_display_mode]"><option>fixed</option><option>range</option><option selected>starting_at</option><option>contact_for_pricing</option></select></div><div class="field"><label>Price value</label><input name="services[0][price_value]" type="text" value="$2,200"></div></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service #2</h3></div>
+            <div class="field"><label>Name</label><input name="services[1][name]" type="text" value="Knob-and-tube re-wires" required></div>
+            <div class="field"><label>Short description</label><input name="services[1][description_short]" type="text" value="Whole-home re-wire of pre-1950 knob-and-tube systems. Insurance-compliant."></div>
+            <div class="field-row"><div class="field"><label>Price display mode</label><select name="services[1][price_display_mode]"><option>fixed</option><option>range</option><option>starting_at</option><option selected>contact_for_pricing</option></select></div><div class="field"><label>Price value</label><input name="services[1][price_value]" type="text" value="Contact"></div></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service #3</h3></div>
+            <div class="field"><label>Name</label><input name="services[2][name]" type="text" value="EV charger installation"></div>
+            <div class="field"><label>Short description</label><input name="services[2][description_short]" type="text" value="Level-2 home EV chargers. Tesla, ChargePoint, Wallbox. ESA paperwork handled."></div>
+            <div class="field-row"><div class="field"><label>Price display mode</label><select name="services[2][price_display_mode]"><option>fixed</option><option>range</option><option selected>starting_at</option><option>contact_for_pricing</option></select></div><div class="field"><label>Price value</label><input name="services[2][price_value]" type="text" value="$1,100"></div></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service #4</h3></div>
+            <div class="field"><label>Name</label><input name="services[3][name]" type="text" value="Pot lights &amp; recessed lighting"></div>
+            <div class="field"><label>Short description</label><input name="services[3][description_short]" type="text" value="LED pot lights for kitchens, basements, and finished living spaces. Dimmer-compatible."></div>
+            <div class="field-row"><div class="field"><label>Price display mode</label><select name="services[3][price_display_mode]"><option selected>fixed</option><option>range</option><option>starting_at</option><option>contact_for_pricing</option></select></div><div class="field"><label>Price value</label><input name="services[3][price_value]" type="text" value="$185 per light installed"></div></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Service #5</h3></div>
+            <div class="field"><label>Name</label><input name="services[4][name]" type="text" value="ESA inspections coordinated"></div>
+            <div class="field"><label>Short description</label><input name="services[4][description_short]" type="text" value="Permit pulled, paperwork filed, ESA inspector coordinated for any homeowner project."></div>
+            <div class="field-row"><div class="field"><label>Price display mode</label><select name="services[4][price_display_mode]"><option selected>fixed</option><option>range</option><option>starting_at</option><option>contact_for_pricing</option></select></div><div class="field"><label>Price value</label><input name="services[4][price_value]" type="text" value="$325 flat"></div></div>
+          </div>
+          <button type="button" class="btn-add-repeat" data-target="services">+ Add a service</button>
+        </section>
+
+        <!-- Booking -->
+        <section class="field-group">
+          <h2>Booking &amp; quoting</h2>
+          <div class="field"><label for="primary_inquiry_type">Primary inquiry method</label><select id="primary_inquiry_type" name="primary_inquiry_type"><option>booking</option><option selected>quote_request</option><option>callback</option><option>contact_form</option></select></div>
+          <div class="field"><label for="quote_response_time">Quote response time</label><input id="quote_response_time" name="quote_response_time" type="text" value="Within one business day"></div>
+          <div class="field"><label><input type="checkbox" name="free_estimates_offered" value="true" checked> Free estimates offered</label></div>
+          <div class="field"><label for="cancellation_policy_text">Cancellation policy</label><textarea id="cancellation_policy_text" name="cancellation_policy_text">Site visits and phone quotes are free. You can cancel or reschedule any time before the visit — no charge.</textarea></div>
+          <div class="field"><label for="rescheduling_policy_text">Rescheduling policy</label><textarea id="rescheduling_policy_text" name="rescheduling_policy_text">Once a signed contract and deposit are in place, the deposit is non-refundable. We commit shop time, pull permits, and order parts based on the deposit.</textarea></div>
+        </section>
+
+        <!-- Team -->
+        <section class="field-group">
+          <h2>Team</h2>
+          <div class="field"><label><input type="checkbox" name="team_section_enabled" value="true" checked> Show team section?</label></div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Team member #1</h3></div>
+            <div class="field-row"><div class="field"><label>Name</label><input name="team_members[0][name]" type="text" value="Marcus Vault"></div><div class="field"><label>Role</label><input name="team_members[0][role]" type="text" value="Owner / Master Electrician"></div></div>
+            <div class="field"><label>Credentials</label><input name="team_members[0][credentials]" type="text" value="309A Construction &amp; Maintenance Electrician, 22 years"></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Team member #2</h3></div>
+            <div class="field-row"><div class="field"><label>Name</label><input name="team_members[1][name]" type="text" value="Diana Halpern"></div><div class="field"><label>Role</label><input name="team_members[1][role]" type="text" value="Journeyman Electrician"></div></div>
+            <div class="field"><label>Credentials</label><input name="team_members[1][credentials]" type="text" value="309A, 7 years"></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Team member #3</h3></div>
+            <div class="field-row"><div class="field"><label>Name</label><input name="team_members[2][name]" type="text" value="Nicholas Adesina"></div><div class="field"><label>Role</label><input name="team_members[2][role]" type="text" value="Journeyman Electrician"></div></div>
+            <div class="field"><label>Credentials</label><input name="team_members[2][credentials]" type="text" value="309A, 4 years"></div>
+          </div>
+        
+          <button type="button" class="btn-add-repeat" data-target="team_members">+ Add a team member</button>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="field-group">
+          <h2>Testimonials</h2>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Testimonial #1</h3></div>
+            <div class="field"><label>Quote</label><textarea name="testimonials[0][quote]">We had three electricians quote our knob-and-tube re-wire — a 1924 Annex semi. Vault's quote was the middle of the three but the only one that wrote a clear scope, included drywall patches, and committed to a finish date. They came in two days early, the ESA inspection passed first visit, and Marcus walked us through every junction box he'd touched. Two years in, no issues.</textarea></div>
+            <div class="field-row"><div class="field"><label>Author</label><input name="testimonials[0][author_name]" type="text" value="Andre &amp; Maria K."></div><div class="field"><label>Context</label><input name="testimonials[0][author_context]" type="text" value="Annex homeowners, whole-home knob-and-tube re-wire, 2024"></div></div>
+            <div class="field-row"><div class="field"><label>Rating (1–5)</label><input name="testimonials[0][rating]" type="number" min="1" max="5" value="5"></div><div class="field"><label>Source</label><select name="testimonials[0][source]"><option selected>google</option><option>facebook</option><option>direct</option><option>homestars</option></select></div></div>
+          </div>
+        
+          <button type="button" class="btn-add-repeat" data-target="testimonials">+ Add a testimonial</button>
+        </section>
+
+        <!-- FAQs -->
+        <section class="field-group">
+          <h2>FAQs</h2>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>FAQ #1</h3></div>
+            <div class="field"><label>Question</label><input name="faqs[0][question]" type="text" value="Do you handle the ESA paperwork yourself?"></div>
+            <div class="field"><label>Answer</label><textarea name="faqs[0][answer]">Yes — every job. We pull the permit before we start, coordinate the ESA inspector after we finish, and hand you the signed certificate. You never deal with the regulator directly.</textarea></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>FAQ #2</h3></div>
+            <div class="field"><label>Question</label><input name="faqs[1][question]" type="text" value="How fast can you book a panel upgrade?"></div>
+            <div class="field"><label>Answer</label><textarea name="faqs[1][answer]">Most upgrades are scheduled within the same week. Worst case is two weeks if we're holding for a permit. We give you the realistic date at the quote — not a sales-y promise.</textarea></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>FAQ #3</h3></div>
+            <div class="field"><label>Question</label><input name="faqs[2][question]" type="text" value="Is your work guaranteed?"></div>
+            <div class="field"><label>Answer</label><textarea name="faqs[2][answer]">Ten-year workmanship warranty in writing on every install. If anything we did needs fixing within ten years, we come back at no charge — even after the original homeowner has moved out.</textarea></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>FAQ #4</h3></div>
+            <div class="field"><label>Question</label><input name="faqs[3][question]" type="text" value="Do you charge for the quote?"></div>
+            <div class="field"><label>Answer</label><textarea name="faqs[3][answer]">Phone quotes are free if you can send a panel photo. In-person site visits for larger jobs are free within Toronto and East York. Outside the core we charge a $90 site-visit fee credited against any work done.</textarea></div>
+          </div>
+        
+          <button type="button" class="btn-add-repeat" data-target="faqs">+ Add a question</button>
+        </section>
+
+        <!-- Trust signals -->
+        <section class="field-group">
+          <h2>Trust signals</h2>
+          <div class="field-row">
+            <div class="field"><label for="years_in_business">Years in business</label><input id="years_in_business" name="years_in_business" type="number" value="12"></div>
+            <div class="field"><label for="clients_served_count">Clients served</label><input id="clients_served_count" name="clients_served_count" type="number" value="1840"></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Payment method #1</h3></div>
+            <div class="field"><select name="payment_methods_accepted[0][method]"><option>cash</option><option>debit</option><option>credit</option><option selected>e_transfer</option><option>cheque</option></select></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Payment method #2</h3></div>
+            <div class="field"><select name="payment_methods_accepted[1][method]"><option>cash</option><option>debit</option><option selected>credit</option><option>e_transfer</option><option>cheque</option></select></div>
+          </div>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Payment method #3</h3></div>
+            <div class="field"><select name="payment_methods_accepted[2][method]"><option>cash</option><option>debit</option><option>credit</option><option>e_transfer</option><option selected>cheque</option></select></div>
+          </div>
+        
+          <button type="button" class="btn-add-repeat" data-target="payment_methods_accepted">+ Add a payment method</button>
+        </section>
+
+        <!-- Legal & insurance section -->
+        <section class="field-group">
+          <h2>Trades legal &amp; insurance</h2>
+          <p class="group-help">Legal and insurance details we display on your site (license number, insurance, WSIB).</p>
+          <div class="field"><label for="business_registration_number">Business registration number</label><input id="business_registration_number" name="business_registration_number" type="text" value="ON-CR-2014-08773"></div>
+          <div class="field"><label><input type="checkbox" name="annual_revenue_over_30k" value="true" checked> Annual revenue exceeds $30,000?</label></div>
+          <div class="field"><label for="gst_hst_number">GST/HST number</label><input id="gst_hst_number" name="gst_hst_number" type="text" value="819 442 661 RT0001"></div>
+          <div class="field"><label for="entity_type">Entity type</label><select id="entity_type" name="entity_type"><option>sole_proprietorship</option><option>partnership</option><option selected>corporation</option></select></div>
+          <div class="field"><label for="insurance_carrier">Insurance carrier</label><input id="insurance_carrier" name="insurance_carrier" type="text" value="Intact Insurance"></div>
+          <div class="field"><label for="insurance_coverage_type">Coverage type</label><select id="insurance_coverage_type" name="insurance_coverage_type"><option selected>general_liability</option><option>professional_liability</option><option>both</option></select></div>
+          <div class="field"><label for="insurance_coverage_amount">Coverage amount</label><input id="insurance_coverage_amount" name="insurance_coverage_amount" type="text" value="$5M"></div>
+          <div class="field"><label for="wsib_wcb_account_number">WSIB account number</label><input id="wsib_wcb_account_number" name="wsib_wcb_account_number" type="text" value="8814433"></div>
+          <div class="field"><label for="certificate_of_qualification_number">Certificate of Qualification (309A)</label><input id="certificate_of_qualification_number" name="certificate_of_qualification_number" type="text" value="309A-ON-2003-44182"></div>
+          <div class="field"><label for="certificate_issuing_body">Certificate issuing body</label><input id="certificate_issuing_body" name="certificate_issuing_body" type="text" value="Skilled Trades Ontario"></div>
+          <div class="field"><label for="ecra_esa_contractor_number">ECRA/ESA contractor licence (ON, electrician)</label><input id="ecra_esa_contractor_number" name="ecra_esa_contractor_number" type="text" value="7012890"><p class="field-help">Required and must display on website, vehicles, ads, estimates per O. Reg. 22/04.</p></div>
+        </section>
+
+        <!-- Hero content -->
+        <section class="field-group">
+          <h2>Hero / homepage</h2>
+          <div class="field"><label for="hero_headline">Hero headline</label><input id="hero_headline" name="hero_headline" type="text" value="Honest electrical work. The lights stay on."></div>
+          <div class="field"><label for="hero_subhead">Hero subhead</label><textarea id="hero_subhead" name="hero_subhead">A small Toronto shop on Christie Street. Panel upgrades, knob-and-tube re-wires, EV chargers, and ESA-coordinated installs for pre-1950 homes around the Annex, Roncesvalles, the Junction, and Leslieville.</textarea></div>
+        </section>
+
+        <!-- Social -->
+        <section class="field-group">
+          <h2>Social media &amp; reviews</h2>
+          <div class="field"><label for="social_facebook">Facebook URL</label><input id="social_facebook" name="social_facebook" type="url" value="https://facebook.com/vaultelectric"></div>
+          <div class="field"><label for="social_instagram">Instagram URL</label><input id="social_instagram" name="social_instagram" type="url" value="https://instagram.com/vaultelectric"></div>
+          <div class="field"><label for="social_linkedin">LinkedIn URL</label><input id="social_linkedin" name="social_linkedin" type="url" value="https://linkedin.com/company/vaultelectric"></div>
+          <div class="field"><label for="social_youtube">YouTube URL</label><input id="social_youtube" name="social_youtube" type="url" value="https://youtube.com/@vaultelectric"></div>
+          <div class="field"><label for="social_tiktok">TikTok URL</label><input id="social_tiktok" name="social_tiktok" type="url" value="https://tiktok.com/@vaultelectric"></div>
+          <div class="field"><label for="social_x_twitter">X / Twitter URL</label><input id="social_x_twitter" name="social_x_twitter" type="url" value="https://x.com/vaultelectric"></div>
+          <div class="field"><label for="social_pinterest">Pinterest URL</label><input id="social_pinterest" name="social_pinterest" type="url" value="https://pinterest.com/vaultelectric"></div>
+          <div class="field"><label for="social_yelp">Yelp URL</label><input id="social_yelp" name="social_yelp" type="url" value="https://yelp.ca/biz/vaultelectric"></div>
+          <div class="field"><label for="google_business_profile_url">Google Business Profile URL</label><input id="google_business_profile_url" name="google_business_profile_url" type="url" value="https://g.co/kgs/vaultelectric"></div>
+          <div class="field-row">
+            <div class="field"><label for="gbp_average_rating">GBP avg rating</label><input id="gbp_average_rating" name="gbp_average_rating" type="number" step="0.1" value="4.9"></div>
+            <div class="field"><label for="gbp_review_count">GBP review count</label><input id="gbp_review_count" name="gbp_review_count" type="number" value="218"></div>
+          </div>
+        </section>
+
+        <!-- Legal display -->
+        <section class="field-group">
+          <h2>Legal display copy</h2>
+          <div class="field"><label for="liability_cap_amount">Liability cap amount</label><input id="liability_cap_amount" name="liability_cap_amount" type="text" value="the fees paid in the 12 months preceding the claim"></div>
+          <div class="field"><label for="governing_law_province">Governing law province</label><select id="governing_law_province" name="governing_law_province"><option selected>ON</option><option>NS</option><option>BC</option><option>AB</option></select></div>
+          <div class="field"><label for="accessibility_statement_text">Accessibility statement</label><textarea id="accessibility_statement_text" name="accessibility_statement_text">Vault Electric is committed to making this website usable by everyone. We aim to conform to WCAG 2.2 Level AA across every page.</textarea></div>
+          <div class="field"><label for="cookie_banner_copy">Cookie banner copy</label><textarea id="cookie_banner_copy" name="cookie_banner_copy">We use a few cookies — one to remember your accessibility preferences and (with your permission) a small analytics cookie. Nothing for advertising.</textarea></div>
+        </section>
+
+        <!-- Privacy -->
+        <section class="field-group">
+          <h2>Privacy</h2>
+          <div class="field-row">
+            <div class="field"><label for="privacy_officer_name">Privacy officer name</label><input id="privacy_officer_name" name="privacy_officer_name" type="text" value="Marcus Vault"></div>
+            <div class="field"><label for="privacy_officer_email">Privacy officer email</label><input id="privacy_officer_email" name="privacy_officer_email" type="email" value="privacy@vaultelectric.ca"></div>
+          </div>
+          <div class="field"><label><input type="checkbox" name="data_stored_outside_canada" value="true" checked> Data stored outside Canada?</label></div>
+          <div class="field"><label for="data_retention_period">Data retention period</label><input id="data_retention_period" name="data_retention_period" type="text" value="Form submissions are retained for 24 months from receipt, then deleted."></div>
+        </section>
+
+        <!-- AI tools -->
+        <section class="field-group">
+          <h2>AI tools</h2>
+          <div class="field"><label><input type="checkbox" name="chatbot_enabled" value="true"> Enable website chatbot?</label></div>
+          <div class="field"><label><input type="checkbox" name="receptionist_enabled" value="true"> Enable AI phone receptionist?</label></div>
+          <div class="field"><label for="ai_tool_disclaimer_text">AI tool disclaimer</label><textarea id="ai_tool_disclaimer_text" name="ai_tool_disclaimer_text">Our AI assistant and phone receptionist provide information only. They do not make appointments, take payments, or commit our business to any action.</textarea></div>
+        </section>
+
+        <!-- Analytics -->
+        <section class="field-group">
+          <h2>Analytics</h2>
+          <div class="field"><label><input type="checkbox" name="ga4_enabled" value="true"> Enable GA4?</label></div>
+          <div class="field"><label for="ga4_measurement_id">GA4 measurement ID</label><input id="ga4_measurement_id" name="ga4_measurement_id" type="text" value="" placeholder="G-XXXXXXXXXX"></div>
+        </section>
+
+        <!-- Forms config -->
+        <section class="field-group">
+          <h2>Forms</h2>
+          <div class="field"><label for="form_recipient_email">Form recipient email</label><input id="form_recipient_email" name="form_recipient_email" type="email" value="hello@vaultelectric.ca"></div>
+          <div class="field"><label for="form_contact_thankyou_text">Contact thank-you text</label><textarea id="form_contact_thankyou_text" name="form_contact_thankyou_text">Thanks for reaching out. We'll respond within one business day.</textarea></div>
+          <div class="field"><label for="form_booking_thankyou_text">Booking thank-you text</label><textarea id="form_booking_thankyou_text" name="form_booking_thankyou_text">Project inquiry received. You'll get an email reply within one business day with either a phone quote or two or three site-visit dates that work for both of us.</textarea></div>
+        </section>
+
+        <!-- Client requests (last in base bucket per template) -->
+        <section class="field-group">
+          <h2>Requests for the operator</h2>
+          <p class="group-help">Anything you'd like added, changed, or fixed — design tweaks, new images, third-party tools, non-urgent maintenance.</p>
+          <div class="repeatable-block">
+            <div class="repeat-header"><h3>Request #1 (optional)</h3></div>
+            <div class="field"><label>Request type</label><select name="requests[0][request_type]"><option value="">— Choose one —</option><option>design_change</option><option>content_change</option><option>new_image</option><option>third_party_tool</option><option>maintenance_fix</option><option>other</option></select></div>
+            <div class="field"><label>What would you like?</label><textarea name="requests[0][description]"></textarea></div>
+            <div class="field"><label>Attachment (optional)</label><input type="file" name="requests[0][attachment]" accept="image/*"></div>
+          </div>
+          <button type="button" class="btn-add-repeat" data-target="requests">+ Add another request</button>
+          <div class="field" style="margin-top: var(--space-6);"><label for="general_notes">General notes</label><textarea id="general_notes" name="general_notes" placeholder="Anything else that doesn't fit a structured field above…"></textarea></div>
+        </section>
+
+        <!-- =================== FIELDS:ADVANCED =================== -->
+        <details class="advanced-section">
+          <summary>Show advanced customization options</summary>
+          <p class="group-help">These options control how the site looks and what sections appear. You don't need to change anything here unless you want a structural or visual change.</p>
+
+          <section class="field-group">
+            <h2>Brand assets</h2>
+            <div class="field"><label for="logo_light">Logo (light backgrounds)</label><input id="logo_light" name="logo_light" type="file" accept="image/*"></div>
+            <div class="field"><label for="logo_dark">Logo (dark backgrounds)</label><input id="logo_dark" name="logo_dark" type="file" accept="image/*"></div>
+            <div class="field"><label for="favicon">Favicon</label><input id="favicon" name="favicon" type="file" accept="image/*"></div>
+            <div class="field"><label for="og_share_image">Open Graph share image</label><input id="og_share_image" name="og_share_image" type="file" accept="image/*"></div>
+          </section>
+
+          <section class="field-group">
+            <h2>Colours (palette: industrial-mono — locked at template level)</h2>
+            <div class="field-row">
+              <div class="field"><label for="color_primary_light">Primary (light)</label><input id="color_primary_light" name="color_primary_light" type="color" value="#1e4dd8"></div>
+              <div class="field"><label for="color_secondary_light">Secondary (light)</label><input id="color_secondary_light" name="color_secondary_light" type="color" value="#0a0a0a"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label for="color_accent_light">Accent (light)</label><input id="color_accent_light" name="color_accent_light" type="color" value="#3d6ce8"></div>
+              <div class="field"><label for="color_primary_dark">Primary (dark)</label><input id="color_primary_dark" name="color_primary_dark" type="color" value="#3d6ce8"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label for="color_secondary_dark">Secondary (dark)</label><input id="color_secondary_dark" name="color_secondary_dark" type="color" value="#fafafa"></div>
+              <div class="field"><label for="color_accent_dark">Accent (dark)</label><input id="color_accent_dark" name="color_accent_dark" type="color" value="#1e4dd8"></div>
+            </div>
+          </section>
+
+          <section class="field-group">
+            <h2>Typography</h2>
+            <div class="field-row">
+              <div class="field"><label for="font_heading">Heading font</label><input id="font_heading" name="font_heading" type="text" value="Neue Haas Grotesk Display"></div>
+              <div class="field"><label for="font_body">Body font</label><input id="font_body" name="font_body" type="text" value="Neue Haas Grotesk Text"></div>
+            </div>
+          </section>
+
+          <section class="field-group">
+            <h2>Navigation labels</h2>
+            <div class="field-row">
+              <div class="field"><label>Home</label><input name="nav_label_home" type="text" value="Home"></div>
+              <div class="field"><label>Services</label><input name="nav_label_services" type="text" value="Services"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>About</label><input name="nav_label_about" type="text" value="About"></div>
+              <div class="field"><label>Contact</label><input name="nav_label_contact" type="text" value="Contact"></div>
+            </div>
+            <div class="field"><label>Header CTA label</label><input name="header_cta_label" type="text" value="Request a Site Visit"></div>
+            <div class="field"><label>Header CTA target</label><select name="header_cta_target"><option value="booking.html" selected>booking.html</option><option value="contact.html">contact.html</option></select></div>
+          </section>
+
+          <section class="field-group">
+            <h2>Section visibility</h2>
+            <div class="field"><label><input type="checkbox" name="section_hero_enabled" checked> Hero</label></div>
+            <div class="field"><label><input type="checkbox" name="section_services_preview_enabled" checked> Services preview</label></div>
+            <div class="field"><label><input type="checkbox" name="section_about_preview_enabled" checked> About preview</label></div>
+            <div class="field"><label><input type="checkbox" name="section_testimonials_enabled" checked> Testimonials</label></div>
+            <div class="field"><label><input type="checkbox" name="section_portfolio_enabled" checked> Portfolio</label></div>
+            <div class="field"><label><input type="checkbox" name="section_faqs_enabled" checked> FAQs</label></div>
+            <div class="field"><label><input type="checkbox" name="section_trust_signals_enabled" checked> Trust signals</label></div>
+            <div class="field"><label><input type="checkbox" name="section_team_preview_enabled" checked> Team preview</label></div>
+          </section>
+
+          <section class="field-group">
+            <h2>Portfolio projects</h2>
+            <div class="repeatable-block">
+              <div class="repeat-header"><h3>Project #1</h3></div>
+              <div class="field"><label>Title</label><input name="portfolio_projects[0][title]" type="text" value="A 1924 Annex semi brought up to 2025 code"></div>
+              <div class="field-row">
+                <div class="field"><label>Location</label><input name="portfolio_projects[0][location]" type="text" value="The Annex, Toronto"></div>
+                <div class="field"><label>Year</label><input name="portfolio_projects[0][timeline]" type="text" value="2024"></div>
+              </div>
+              <div class="field"><label>Service category</label><input name="portfolio_projects[0][service_category]" type="text" value="Knob-and-tube re-wire + panel upgrade"></div>
+              <div class="field"><label>Scope of work</label><textarea name="portfolio_projects[0][scope_of_work]">Complete re-wire of original 1924 knob-and-tube circuits across three storeys, new 200-amp panel in the basement, fourteen LED pot lights in the kitchen and finished basement, dedicated 20-amp circuits for the new range and dishwasher, and ESA inspection completed within twelve business days. Insurance-compliance letter issued at handover.</textarea></div>
+            </div>
+            <button type="button" class="btn-add-repeat" data-target="portfolio_projects">+ Add a project</button>
+          </section>
+
+          <section class="field-group">
+            <h2>Functional toggles</h2>
+            <div class="field"><label><input type="checkbox" name="cookie_banner_enabled" checked> Cookie banner</label></div>
+            <div class="field"><label><input type="checkbox" name="accessibility_widget_enabled" checked> Accessibility widget</label></div>
+            <div class="field"><label><input type="checkbox" name="bilingual_enabled" checked> Bilingual site (EN + FR)?</label><p class="field-help">Default true in ON for this archetype. Uncheck to suppress the FR mirror for this client.</p></div>
+            <div class="field"><label for="dark_mode_default">Dark mode default</label><select id="dark_mode_default" name="dark_mode_default"><option selected>auto</option><option>light</option><option>dark</option></select></div>
+          </section>
+
+          <section class="field-group">
+            <h2>Third-party embeds</h2>
+            <div class="field"><label for="embed_calendar_provider">Calendar provider</label><select id="embed_calendar_provider" name="embed_calendar_provider"><option selected>none</option><option>google_calendar</option><option>calendly</option><option>acuity</option></select></div>
+            <div class="field"><label for="embed_reviews_provider">Reviews widget provider</label><select id="embed_reviews_provider" name="embed_reviews_provider"><option selected>none</option><option>google</option><option>homestars</option></select></div>
+            <div class="field"><label for="embed_chat_provider">Chat widget provider</label><select id="embed_chat_provider" name="embed_chat_provider"><option selected>none</option><option>whatsapp</option><option>messenger</option><option>tidio</option><option>intercom</option><option>crisp</option></select></div>
+          </section>
+        </details>
+
+        <!-- =================== AGREEMENT =================== -->
+        
+        <details class="field-group field-group--customization" style="border: 1px dashed var(--color-border, #ccc); padding: var(--space-6); border-radius: var(--radius); margin-bottom: var(--space-8);">
+          <summary style="cursor: pointer; font-family: var(--font-heading); font-size: 1.1rem; font-weight: 500; padding: var(--space-2) 0;">Further customization (optional) — anything else you'd like done</summary>
+          <p class="group-help" style="margin-top: var(--space-4);">Non-sensitive tweaks you might want. Leave blank if not applicable.</p>
+
+          <div class="field">
+            <label for="custom_hero_text_color">Hero text color preference</label>
+            <p class="field-help">If the cream-white headline over your hero photo is hard to read, pick a different color. Default is cream-white.</p>
+            <select id="custom_hero_text_color" name="custom_hero_text_color">
+              <option value="">Default (cream-white)</option>
+              <option value="black">Black</option>
+              <option value="accent">Brand accent color</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="custom_cta_label">Primary CTA button text override</label>
+            <p class="field-help">The big button in the header. Defaults to "Request a Site Visit" for trades. Prefer different language?</p>
+            <input id="custom_cta_label" name="custom_cta_label" type="text" placeholder="e.g. Book Now, Get a Quote, Schedule a Visit">
+          </div>
+
+          <div class="field">
+            <label for="custom_brand_accent_color">Brand accent color override</label>
+            <p class="field-help">If your business has a specific brand color (a hex like #c44e23), we can use it instead of the template default. Leave blank to keep the default.</p>
+            <input id="custom_brand_accent_color" name="custom_brand_accent_color" type="text" placeholder="#1e4dd8">
+          </div>
+
+          <div class="field">
+            <label for="custom_notes">Anything else we should know</label>
+            <p class="field-help">Tone-of-voice notes, things to avoid, references you like. Free-form.</p>
+            <textarea id="custom_notes" name="custom_notes" rows="4" placeholder="e.g. Don't use the phrase 'second-to-none'. Avoid stock photos with people. We don't do work in winter."></textarea>
+          </div>
+        </details>
+
+        <div class="agreement-block">
+          <h2>Confirm accuracy</h2>
+          <p>I have reviewed all the information above. To the best of my knowledge, every value shown — phone numbers, addresses, hours, prices, service descriptions, credentials, license numbers, and any other field — is accurate as of today.</p>
+          <p>I understand that this information will be used to update my live website, and that the AI chatbot and phone receptionist (if enabled) will be trained on what's published on the site. I take responsibility for the accuracy of what I've entered.</p>
+          <div class="agreement-checkbox">
+            <input type="checkbox" id="agreement_accuracy_confirmed" name="agreement_accuracy_confirmed" value="true" required>
+            <label for="agreement_accuracy_confirmed">I confirm that all information on this form is accurate. <span class="required-mark">*</span></label>
+          </div>
+        </div>
+
+        <div class="submit-row">
+          <button type="submit">Submit intake</button>
+        </div>
+      </form>
+    </main>
+
+    <footer style="text-align:center; margin-top: var(--space-12); color: var(--color-text-muted); font-size: 0.85rem;">
+      <p>This form is confidential. Submission is encrypted in transit.</p>
+      <p>Generated 2026-05-23T15:00:00-04:00 · Client ID vault-electric · info.md v1</p>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('click', function (e) {
+      if (e.target.matches('button.btn-add-repeat')) {
+        e.preventDefault();
+        var container = e.target.previousElementSibling;
+        if (!container) return;
+        var template = container.cloneNode(true);
+        var existing = e.target.parentNode.querySelectorAll('.repeatable-block').length;
+        template.querySelectorAll('input, textarea, select').forEach(function (el) {
+          el.value = '';
+          if (el.name) el.name = el.name.replace(/\[\d+\]/, '[' + existing + ']');
+        });
+        e.target.parentNode.insertBefore(template, e.target);
+      }
+      if (e.target.matches('button.btn-remove-repeat')) {
+        e.preventDefault();
+        var block = e.target.closest('.repeatable-block');
+        if (block) block.remove();
+      }
+    });
+
+    function refreshConditionals() {
+      document.querySelectorAll('[data-required-when]').forEach(function (field) {
+        var condition = JSON.parse(field.dataset.requiredWhen);
+        var triggerField = document.querySelector('[name="' + condition.field + '"]');
+        if (!triggerField) return;
+        var triggerValue = triggerField.type === 'checkbox' ? (triggerField.checked ? 'true' : 'false') : triggerField.value;
+        var shouldShow = String(triggerValue) === String(condition.equals);
+        field.style.display = shouldShow ? '' : 'none';
+        var input = field.querySelector('input, select, textarea');
+        if (input) {
+          if (shouldShow) input.setAttribute('required', '');
+          else input.removeAttribute('required');
+        }
+      });
+    }
+    document.addEventListener('change', refreshConditionals);
+    document.addEventListener('DOMContentLoaded', refreshConditionals);
+
+    document.addEventListener('change', function (e) {
+      if (e.target.name === 'embed_chat_provider' && e.target.value !== 'none') {
+        var chatbot = document.querySelector('[name="chatbot_enabled"]');
+        if (chatbot && chatbot.type === 'checkbox' && chatbot.checked) {
+          chatbot.checked = false;
+          alert('The website chatbot has been auto-disabled because you set a third-party chat widget. Only one chat widget can be active at a time.');
+        }
+      }
+      if (e.target.name === 'chatbot_enabled' && e.target.checked) {
+        var chatProvider = document.querySelector('[name="embed_chat_provider"]');
+        if (chatProvider && chatProvider.value !== 'none') {
+          chatProvider.value = 'none';
+          alert('The third-party chat widget has been auto-disabled because you enabled the website chatbot.');
+        }
+      }
+    });
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+      var invalids = Array.from(this.querySelectorAll(':invalid'));
+      if (invalids.length > 0) {
+        e.preventDefault();
+        invalids[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalids[0].focus();
+        alert('Some required fields are missing or incomplete. The first one has been focused.');
+      }
+    });
+  </script>
+</body>
+</html>
